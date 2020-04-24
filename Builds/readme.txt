@@ -1,12 +1,8 @@
-Included in the build are three example scenes and a scene editor. The program opens with 
-the first example scene. 
-To play the animation, click the button "Find Path". This will perform the path search and
-then automatically play the animation.
+Included in the build are three example scenes and a scene editor. The program opens with the first example scene. 
+To play the animation, click the button "Find Path". This will perform the path search and then automatically play the animation.
 "Replay" will replay the motion (if a path was found).
-"Next Scene" will move to the next example scene. This button is available until the last
-example scene.
-"Previous Scene" will move to the previous example scene. This button is available for each example
-scene after the first. 
+"Next Scene" will move to the next example scene. This button is available until the last example scene.
+"Previous Scene" will move to the previous example scene. This button is available for each example scene after the first. 
 "Quit": close the program
 
 "Create Scene" opens an empty scene and lets you move the goal position and add obstacles.
