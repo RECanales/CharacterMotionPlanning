@@ -59,8 +59,8 @@ public class State
 
 			else
 			{
-				float rotation = -90;
-				while (rotation <= 90)
+				float rotation = -180;
+				while (rotation < 180)
 				{
 					float new_euler = theta + rotation;
 					Quaternion newRotation = Quaternion.Euler(0, new_euler, 0);
