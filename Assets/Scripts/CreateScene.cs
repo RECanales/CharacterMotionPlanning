@@ -36,12 +36,12 @@ public class CreateScene : MonoBehaviour
             scale = false;
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (!(speed_input.gameObject.activeSelf || range_input.gameObject.activeSelf) &&  Input.GetMouseButtonDown(0))
         {
             RaycastHit hit;
             Ray ray = ortho.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out hit))
+            if (ray.origin.x > -3.2f && Physics.Raycast(ray, out hit))
             {
                 Transform objectHit = hit.transform;
                 if (objectHit.name == "goal" || objectHit.name.Contains("obstacle"))
@@ -104,13 +104,13 @@ public class CreateScene : MonoBehaviour
 
     public void AddObstacle(bool moving)
     {
-        if (obstacle_count > 10)
+        if (obstacle_count > 15)
         {
-            print("Only 10 obstacles allowed.");
+            print("Only 15 obstacles allowed.");
             return;
         }
 
-        Transform new_obstacle = Instantiate(obstacle_prefab, new Vector3(0, 0.2f, 0), Quaternion.identity);
+        Transform new_obstacle = Instantiate(obstacle_prefab, new Vector3(Random.Range(0, 1.5f), 0.2f, Random.Range(0, 1.5f)), Quaternion.identity);
         new_obstacle.parent = obstacle_parent;
         if (moving)
         {
@@ -126,6 +126,8 @@ public class CreateScene : MonoBehaviour
             else
                 new_obstacle.GetComponent<Obstacle>().direction = Obstacle.Direction.Static;
 
+            range_input.text = "";
+            speed_input.text = "";
             speed_input.gameObject.SetActive(false);
             range_input.gameObject.SetActive(false);
         }

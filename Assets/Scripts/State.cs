@@ -50,60 +50,50 @@ public class State
 
 		foreach (AnimationClip clip in motions)
 		{
-			if (clip.name == "Idle_Ready")
+			float rotation = -180;
+			while (rotation < 180)
 			{
-				State new_state = new State(position, theta, clip, clip.length + time);
-				new_state.SetParams(new Vector2(0, 0));
-				possible_states.Add(new_state);
-			}
+				float new_euler = theta + rotation;
+				Quaternion newRotation = Quaternion.Euler(0, new_euler, 0);
 
-			else
-			{
-				float rotation = -180;
-				while (rotation < 180)
+				if (clip.name == "Walk_Fwd")
 				{
-					float new_euler = theta + rotation;
-					Quaternion newRotation = Quaternion.Euler(0, new_euler, 0);
-
-					if (clip.name == "Walk_Fwd")
+					foreach (float f in mult)
 					{
-						foreach (float f in mult)
-						{
-							Vector3 child_pos = curr_pos + newRotation * (clip.length * clip.averageSpeed * f);
-							State new_state = new State(new Vector2(child_pos.x, child_pos.z), new_euler, clip, clip.length + time) { p = f };
-							new_state.SetParams(new Vector2(0, f));
-
-							if (!Collision(obstacles, new_state, radius, clip.length))
-								possible_states.Add(new_state);
-						}
-					}
-
-					else
-					{
-						Vector3 child_pos = curr_pos + newRotation * (clip.length * clip.averageSpeed);
-						State new_state = new State(new Vector2(child_pos.x, child_pos.z), new_euler, clip, clip.length + time);
-						if (clip.name == "Jog_Fwd")
-						{
-							new_state.SetParams(new Vector2(0, 2f));
-							new_state.weight = 1.5f;
-							if (Vector3.Magnitude(new_state.GetPosition() - goal.GetPosition()) <= 1.5f)
-								new_state.weight = 2f;
-						}
-						else if (motion_clip.name != "Idle_Ready")    // jump
-						{
-							new_state.SetParams(new Vector2(0, 3f));
-							new_state.SetJump(true);
-							new_state.weight = 2.3f;
-							if (Vector3.Magnitude(new_state.GetPosition() - goal.GetPosition()) <= 1.5f)
-								new_state.weight = 3f;
-						}
+						Vector3 child_pos = curr_pos + newRotation * (clip.length * clip.averageSpeed * f);
+						State new_state = new State(new Vector2(child_pos.x, child_pos.z), new_euler, clip, clip.length + time) { p = f };
+						new_state.SetParams(new Vector2(0, f));
 
 						if (!Collision(obstacles, new_state, radius, clip.length))
 							possible_states.Add(new_state);
 					}
-
-					rotation += 15;
 				}
+
+				else
+				{
+					Vector3 child_pos = curr_pos + newRotation * (clip.length * clip.averageSpeed);
+					State new_state = new State(new Vector2(child_pos.x, child_pos.z), new_euler, clip, clip.length + time);
+					if (clip.name == "Jog_Fwd")
+					{
+						new_state.SetParams(new Vector2(0, 2f));
+						new_state.weight = 1.5f;
+						if (Vector3.Magnitude(new_state.GetPosition() - goal.GetPosition()) <= 1.5f)
+							new_state.weight = 2f;
+					}
+					else if (motion_clip.name != "Idle_Ready")    // jump
+					{
+						new_state.SetParams(new Vector2(0, 3f));
+						new_state.SetJump(true);
+						new_state.weight = 2.3f;
+						if (Vector3.Magnitude(new_state.GetPosition() - goal.GetPosition()) <= 1.5f)
+							new_state.weight = 3f;
+					}
+
+					if (!Collision(obstacles, new_state, radius, clip.length))
+						possible_states.Add(new_state);
+				}
+
+				rotation += 15;
 			}
 		}
 
